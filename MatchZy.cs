@@ -20,7 +20,7 @@ namespace MatchZy
 
         public override string ModuleDescription => "A plugin for running and managing CS2 practice/pugs/scrims/matches!";
 
-        public string chatPrefix = $"[{ChatColors.Green}MatchZy{ChatColors.Default}]";
+        public string chatPrefix = $"[{ChatColors.Red}ESPORTISM{ChatColors.Default}]";
         public string adminChatPrefix = $"[{ChatColors.Red}ADMIN{ChatColors.Default}]";
 
         // Plugin start phase data
