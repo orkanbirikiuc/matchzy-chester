@@ -63,6 +63,28 @@ public partial class MatchZy
                     AutoStart();
                 }
             }
+
+            // Send player_connected event if match is setup
+            if (isMatchSetup && liveMatchId != -1 && !player.IsBot && !player.IsHLTV)
+            {
+                CsTeam playerTeam = GetPlayerTeam(player);
+                string teamName = playerTeam == CsTeam.CounterTerrorist ? "team1" :
+                                  playerTeam == CsTeam.Terrorist ? "team2" : "spectator";
+
+                var playerConnectedEvent = new MatchZyPlayerConnectedEvent
+                {
+                    MatchId = liveMatchId,
+                    SteamId = player.SteamID.ToString(),
+                    Name = player.PlayerName,
+                    Team = teamName,
+                };
+
+                Task.Run(async () =>
+                {
+                    await SendEventAsync(playerConnectedEvent);
+                });
+            }
+
             return HookResult.Continue;
 
         }

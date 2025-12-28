@@ -236,3 +236,60 @@ public class MatchZyDemoUploadedEvent : MatchZyMatchEvent
     {
     }
 }
+
+// Chester-specific events below
+
+/// <summary>
+/// Sent when warmup phase begins
+/// </summary>
+public class MatchZyWarmupStartedEvent : MatchZyMapEvent
+{
+    public MatchZyWarmupStartedEvent() : base("warmup_started")
+    {
+    }
+}
+
+/// <summary>
+/// Sent when knife round begins
+/// </summary>
+public class MatchZyKnifeStartedEvent : MatchZyMapEvent
+{
+    public MatchZyKnifeStartedEvent() : base("knife_started")
+    {
+    }
+}
+
+/// <summary>
+/// Sent when knife round ends with the winner information
+/// </summary>
+public class MatchZyKnifeEndedEvent : MatchZyMapEvent
+{
+    [JsonPropertyName("winner")]
+    public required string Winner { get; init; }
+
+    [JsonPropertyName("winner_side")]
+    public required string WinnerSide { get; init; }
+
+    public MatchZyKnifeEndedEvent() : base("knife_ended")
+    {
+    }
+}
+
+/// <summary>
+/// Sent when a player connects to the match
+/// </summary>
+public class MatchZyPlayerConnectedEvent : MatchZyMatchEvent
+{
+    [JsonPropertyName("steam_id")]
+    public required string SteamId { get; init; }
+
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    [JsonPropertyName("team")]
+    public required string Team { get; init; }
+
+    public MatchZyPlayerConnectedEvent() : base("player_connected")
+    {
+    }
+}

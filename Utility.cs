@@ -234,6 +234,21 @@ namespace MatchZy
             unreadyPlayerMessageTimer ??= AddTimer(chatTimerDelay, SendUnreadyPlayersMessage, TimerFlags.REPEAT);
             isWarmup = true;
             ExecWarmupCfg();
+
+            // Send warmup_started event if match is setup
+            if (isMatchSetup && liveMatchId != -1)
+            {
+                var warmupStartedEvent = new MatchZyWarmupStartedEvent
+                {
+                    MatchId = liveMatchId,
+                    MapNumber = matchConfig.CurrentMapNumber,
+                };
+
+                Task.Run(async () =>
+                {
+                    await SendEventAsync(warmupStartedEvent);
+                });
+            }
         }
 
         private void StartKnifeRound()
@@ -268,6 +283,18 @@ namespace MatchZy
             PrintToAllChat($"{ChatColors.Olive}KNIFE!");
             PrintToAllChat($"{ChatColors.Lime}KNIFE!");
             PrintToAllChat($"{ChatColors.Green}KNIFE!");
+
+            // Send knife_started event
+            var knifeStartedEvent = new MatchZyKnifeStartedEvent
+            {
+                MatchId = liveMatchId,
+                MapNumber = matchConfig.CurrentMapNumber,
+            };
+
+            Task.Run(async () =>
+            {
+                await SendEventAsync(knifeStartedEvent);
+            });
         }
 
         private void SendSideSelectionMessage()
@@ -282,10 +309,25 @@ namespace MatchZy
             isWarmup = true;
             ExecWarmupCfg();
             knifeWinnerName = knifeWinner == 3 ? reverseTeamSides["CT"].teamName : reverseTeamSides["TERRORIST"].teamName;
+            string knifeWinnerSide = knifeWinner == 3 ? "CT" : "TERRORIST";
             ShowDamageInfo();
             PrintToAllChat(Localizer["matchzy.knife.sidedecisionpending", knifeWinnerName]);
             // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{knifeWinnerName}{ChatColors.Default} Won the knife. Waiting for them to type {ChatColors.Green}.stay{ChatColors.Default} or {ChatColors.Green}.switch{ChatColors.Default}");
             sideSelectionMessageTimer ??= AddTimer(chatTimerDelay, SendSideSelectionMessage, TimerFlags.REPEAT);
+
+            // Send knife_ended event
+            var knifeEndedEvent = new MatchZyKnifeEndedEvent
+            {
+                MatchId = liveMatchId,
+                MapNumber = matchConfig.CurrentMapNumber,
+                Winner = knifeWinner == 3 ? "team1" : "team2",
+                WinnerSide = knifeWinnerSide,
+            };
+
+            Task.Run(async () =>
+            {
+                await SendEventAsync(knifeEndedEvent);
+            });
         }
 
         private void SetLiveFlags()
@@ -466,12 +508,13 @@ namespace MatchZy
                 reverseTeamSides["CT"] = matchzyTeam1;
                 reverseTeamSides["TERRORIST"] = matchzyTeam2;
 
-                // Keeping the log URLs to avoid their reset on match start.
+                // Keeping the log URLs and webhook secret to avoid their reset on match start.
                 matchConfig = new()
                 {
                     RemoteLogURL = matchConfig.RemoteLogURL,
                     RemoteLogHeaderKey = matchConfig.RemoteLogHeaderKey,
-                    RemoteLogHeaderValue = matchConfig.RemoteLogHeaderValue
+                    RemoteLogHeaderValue = matchConfig.RemoteLogHeaderValue,
+                    WebhookSecret = matchConfig.WebhookSecret
                 };
 
                 KillPhaseTimers();

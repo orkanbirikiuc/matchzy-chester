@@ -72,5 +72,8 @@ namespace MatchZy
 
         [JsonPropertyName("remote_log_header_value")]
         public string RemoteLogHeaderValue { get; set; } = "";
+
+        [JsonPropertyName("webhook_secret")]
+        public string WebhookSecret { get; set; } = "";
     }
 }
