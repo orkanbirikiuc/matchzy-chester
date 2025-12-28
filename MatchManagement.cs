@@ -280,13 +280,24 @@ namespace MatchZy
             matchzyTeam1.teamPlayers = team1["players"];
             matchzyTeam2.teamPlayers = team2["players"];
 
+            // Preserve remote log settings when creating new matchConfig
+            string savedRemoteLogURL = matchConfig.RemoteLogURL;
+            string savedRemoteLogHeaderKey = matchConfig.RemoteLogHeaderKey;
+            string savedRemoteLogHeaderValue = matchConfig.RemoteLogHeaderValue;
+            string savedWebhookSecret = matchConfig.WebhookSecret;
+
             matchConfig = new()
             {
                 MatchId = liveMatchId,
                 MapsPool = maplist.ToObject<List<string>>()!,
                 MapsLeftInVetoPool = maplist.ToObject<List<string>>()!,
                 NumMaps = jsonDataObject["num_maps"]!.Value<int>(),
-                MinPlayersToReady = minimumReadyRequired
+                MinPlayersToReady = minimumReadyRequired,
+                // Restore remote log settings
+                RemoteLogURL = savedRemoteLogURL,
+                RemoteLogHeaderKey = savedRemoteLogHeaderKey,
+                RemoteLogHeaderValue = savedRemoteLogHeaderValue,
+                WebhookSecret = savedWebhookSecret
             };
 
             GetOptionalMatchValues(jsonDataObject);

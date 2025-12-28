@@ -14,8 +14,8 @@ RUN dotnet restore
 # Copy all source files
 COPY . .
 
-# Build the plugin in Release mode
-RUN dotnet build -c Release -o /app/build
+# Publish the plugin in Release mode (includes all dependencies)
+RUN dotnet publish -c Release -o /app/build --no-restore
 
 # Create output stage
 FROM scratch AS export
