@@ -1,0 +1,144 @@
+# ─────────────────────────────────────────────────────────────
+# MatchZy-Chester Build Pipeline
+# Triggers on push to dev branch
+# Builds the plugin and creates release artifacts
+# ─────────────────────────────────────────────────────────────
+
+name: Build MatchZy-Chester
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - 'documentation/**'
+      - '*.md'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Plugin
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      # ─────────────────────────────────────────────────────────
+      # Checkout and Setup
+      # ─────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0'
+
+      # ─────────────────────────────────────────────────────────
+      # Extract Version
+      # ─────────────────────────────────────────────────────────
+      - name: Get MatchZy Version
+        id: version
+        run: |
+          VERSION=$(grep -oP 'ModuleVersion\s*=>\s*"\K[^"]*' MatchZy.cs)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Plugin version: $VERSION"
+
+      # ─────────────────────────────────────────────────────────
+      # Build Plugin
+      # ─────────────────────────────────────────────────────────
+      - name: Build plugin
+        run: |
+          echo "Building MatchZy-Chester v$VERSION"
+          mkdir -p package/MatchZy
+          dotnet publish -c Release -o package/MatchZy
+
+          # Copy language files
+          cp -r lang package/MatchZy/
+
+          # Copy spawns
+          cp -r spawns package/MatchZy/
+
+          # Create tarball for easy deployment
+          cd package
+          tar czf ../matchzy-chester-$VERSION.tar.gz MatchZy
+          cd ..
+
+          # Also create zip for compatibility
+          cd package
+          zip -q -r ../matchzy-chester-$VERSION.zip MatchZy
+          cd ..
+
+          echo "Build artifacts:"
+          ls -la matchzy-chester-$VERSION.*
+
+      # ─────────────────────────────────────────────────────────
+      # Create Release
+      # ─────────────────────────────────────────────────────────
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: MatchZy-Chester v${{ env.VERSION }}
+          tag_name: chester-v${{ env.VERSION }}-${{ github.run_number }}
+          body: |
+            ## MatchZy-Chester v${{ env.VERSION }}
+
+            Chester-integrated MatchZy plugin for ESPORTISM platform.
+
+            ### Changes in this build
+            - Commit: ${{ github.sha }}
+            - Branch: ${{ github.ref_name }}
+
+            ### Installation
+
+            Extract the contents to your CS2 server's plugin directory:
+            ```bash
+            tar xzf matchzy-chester-${{ env.VERSION }}.tar.gz -C /path/to/csgo/addons/counterstrikesharp/plugins/
+            ```
+
+            ### Configuration
+
+            Set the webhook URL in MatchZy config:
+            ```
+            matchzy_remote_log_url "https://chester.dev.orkan.cc/webhooks/matchzy"
+            ```
+
+            ### Prerequisites
+            - Metamod:Source 2.0
+            - CounterStrikeSharp
+          draft: false
+          prerelease: false
+          files: |
+            matchzy-chester-${{ env.VERSION }}.tar.gz
+            matchzy-chester-${{ env.VERSION }}.zip
+
+      # ─────────────────────────────────────────────────────────
+      # Output Build Summary
+      # ─────────────────────────────────────────────────────────
+      - name: Build Summary
+        run: |
+          echo "## MatchZy-Chester Build Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** \`$VERSION\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- matchzy-chester-$VERSION.tar.gz" >> $GITHUB_STEP_SUMMARY
+          echo "- matchzy-chester-$VERSION.zip" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "To deploy to a VPS node:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "# Download the release" >> $GITHUB_STEP_SUMMARY
+          echo "wget https://github.com/orkanbirikiuc/matchzy-chester/releases/download/chester-v$VERSION-${{ github.run_number }}/matchzy-chester-$VERSION.tar.gz" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "# Extract to CS2 server" >> $GITHUB_STEP_SUMMARY
+          echo "sudo tar xzf matchzy-chester-$VERSION.tar.gz -C /var/lib/docker/volumes/cs2-shared/_data/game/csgo/addons/counterstrikesharp/plugins/" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
