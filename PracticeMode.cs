@@ -175,14 +175,14 @@ namespace MatchZy
             }
             GetSpawns();
             PrintToAllChat($"Practice mode loaded!");
-            Server.PrintToChatAll($" {ChatColors.Green}Spawns: {ChatColors.Default}.spawn, .ctspawn, .tspawn, .bestspawn, .worstspawn");
-            Server.PrintToChatAll($" {ChatColors.Green}Bots: {ChatColors.Default}.bot, .nobots, .crouchbot, .boost, .crouchboost");
-            Server.PrintToChatAll($" {ChatColors.Green}Nades: {ChatColors.Default}.loadnade, .savenade, .importnade, .listnades");
-            Server.PrintToChatAll($" {ChatColors.Green}Nade Throw: {ChatColors.Default}.rethrow, .throwindex <index>, .lastindex, .delay <number>");
-            Server.PrintToChatAll($" {ChatColors.Green}Utility & Toggles: {ChatColors.Default}.clear, .fastforward, .last, .back, .solid, .impacts, .traj");
+            Server.PrintToChatAll($" {ChatColors.Gold}Spawns: {ChatColors.Default}.spawn, .ctspawn, .tspawn, .bestspawn, .worstspawn");
+            Server.PrintToChatAll($" {ChatColors.Gold}Bots: {ChatColors.Default}.bot, .nobots, .crouchbot, .boost, .crouchboost");
+            Server.PrintToChatAll($" {ChatColors.Gold}Nades: {ChatColors.Default}.loadnade, .savenade, .importnade, .listnades");
+            Server.PrintToChatAll($" {ChatColors.Gold}Nade Throw: {ChatColors.Default}.rethrow, .throwindex <index>, .lastindex, .delay <number>");
+            Server.PrintToChatAll($" {ChatColors.Gold}Utility & Toggles: {ChatColors.Default}.clear, .fastforward, .last, .back, .solid, .impacts, .traj");
             // On new line to prevent text cutting off
-            Server.PrintToChatAll($" {ChatColors.Green}Utility & Toggles: {ChatColors.Default}.savepos, .loadpos");
-            Server.PrintToChatAll($" {ChatColors.Green}Sides & Others: {ChatColors.Default}.ct, .t, .spec, .fas, .god, .dryrun, .break, .exitprac");
+            Server.PrintToChatAll($" {ChatColors.Gold}Utility & Toggles: {ChatColors.Default}.savepos, .loadpos");
+            Server.PrintToChatAll($" {ChatColors.Gold}Sides & Others: {ChatColors.Default}.ct, .t, .spec, .fas, .god, .dryrun, .break, .exitprac");
         }
 
         public void GetSpawns()
@@ -674,13 +674,13 @@ namespace MatchZy
                                     string lineupDesc = lineupInfo.ContainsKey("Desc") ? lineupInfo["Desc"] : null;
 
                                     // Print messages
-                                    // ReplyToUserCommand(player, $"Lineup {ChatColors.Green}{nearestName}{ChatColors.Default} loaded successfully!");
+                                    // ReplyToUserCommand(player, $"Lineup {ChatColors.Gold}{nearestName}{ChatColors.Default} loaded successfully!");
                                     ReplyToUserCommand(player, Localizer["matchzy.pm.lineuploadedsuccess", nearestName]);
 
                                     if (!string.IsNullOrWhiteSpace(lineupDesc))
                                     {
                                         player.PrintToCenter($"{lineupDesc}");
-                                        // ReplyToUserCommand(player, $"Description: {ChatColors.Green}{lineupDesc}{ChatColors.Default}");
+                                        // ReplyToUserCommand(player, $"Description: {ChatColors.Gold}{lineupDesc}{ChatColors.Default}");
                                         ReplyToUserCommand(player, Localizer["matchzy.pm.lineupdesc", lineupDesc]);
                                     }
 

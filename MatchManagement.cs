@@ -592,11 +592,11 @@ namespace MatchZy
             (int team1Score, int team2Score) = (matchzyTeam1.seriesScore, matchzyTeam2.seriesScore);
             if (winnerName == null)
             {
-                PrintToAllChat($"{ChatColors.Green}{matchzyTeam1.teamName}{ChatColors.Default} and {ChatColors.Green}{matchzyTeam2.teamName}{ChatColors.Default} have tied the match");
+                PrintToAllChat($"{ChatColors.Gold}{matchzyTeam1.teamName}{ChatColors.Default} and {ChatColors.Gold}{matchzyTeam2.teamName}{ChatColors.Default} have tied the match");
             }
             else
             {
-                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{winnerName}{ChatColors.Default} has won the match");
+                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{winnerName}{ChatColors.Default} has won the match");
             }
 
             string winnerTeam = (winnerName == null) ? "none" : matchzyTeam1.seriesScore > matchzyTeam2.seriesScore ? "team1" : "team2";

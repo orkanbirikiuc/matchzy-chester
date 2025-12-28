@@ -155,7 +155,7 @@ namespace MatchZy
             if (unreadyPlayers.Count > 0)
             {
                 string unreadyPlayerList = string.Join(", ", unreadyPlayers);
-                string minimumReadyRequiredMessage = isMatchSetup ? "" : $"[Minimum ready players required: {ChatColors.Green}{minimumReadyRequired}{ChatColors.Default}]";
+                string minimumReadyRequiredMessage = isMatchSetup ? "" : $"[Minimum ready players required: {ChatColors.Gold}{minimumReadyRequired}{ChatColors.Default}]";
 
                 // Server.PrintToChatAll($"{chatPrefix} Unready players: {unreadyPlayerList}. Please type .ready to ready up! {minimumReadyRequiredMessage}");
                 if (isRoundRestorePending)
@@ -172,12 +172,12 @@ namespace MatchZy
                 int countOfReadyPlayers = playerReadyStatus.Count(kv => kv.Value == true);
                 if (isMatchSetup)
                 {
-                    // Server.PrintToChatAll($"{chatPrefix} Current ready players: {ChatColors.Green}{countOfReadyPlayers}{ChatColors.Default}");
+                    // Server.PrintToChatAll($"{chatPrefix} Current ready players: {ChatColors.Gold}{countOfReadyPlayers}{ChatColors.Default}");
                     PrintToAllChat(Localizer["matchzy.utility.readyplayers", countOfReadyPlayers]);
                 }
                 else
                 {
-                    // Server.PrintToChatAll($"{chatPrefix} Minimum ready players required {ChatColors.Green}{minimumReadyRequired}{ChatColors.Default}, current ready players: {ChatColors.Green}{countOfReadyPlayers}{ChatColors.Default}");
+                    // Server.PrintToChatAll($"{chatPrefix} Minimum ready players required {ChatColors.Gold}{minimumReadyRequired}{ChatColors.Default}, current ready players: {ChatColors.Gold}{countOfReadyPlayers}{ChatColors.Default}");
                     PrintToAllChat(Localizer["matchzy.utility.minimumreadyplayers", minimumReadyRequired, countOfReadyPlayers]);
                 }
             }
@@ -280,9 +280,9 @@ namespace MatchZy
                 Server.ExecuteCommand("mp_ct_default_secondary \"\";mp_free_armor 1;mp_freezetime 10;mp_give_player_c4 0;mp_maxmoney 0;mp_respawn_immunitytime 0;mp_respawn_on_death_ct 0;mp_respawn_on_death_t 0;mp_roundtime 1.92;mp_roundtime_defuse 1.92;mp_roundtime_hostage 1.92;mp_t_default_secondary \"\";mp_round_restart_delay 3;mp_team_intro_time 0;mp_restartgame 1;mp_warmup_end;");
             }
 
-            PrintToAllChat($"{ChatColors.Olive}KNIFE!");
-            PrintToAllChat($"{ChatColors.Lime}KNIFE!");
-            PrintToAllChat($"{ChatColors.Green}KNIFE!");
+            PrintToAllChat($"{ChatColors.Yellow}KNIFE!");
+            PrintToAllChat($"{ChatColors.LightRed}KNIFE!");
+            PrintToAllChat($"{ChatColors.Gold}KNIFE!");
 
             // Send knife_started event
             var knifeStartedEvent = new MatchZyKnifeStartedEvent
@@ -301,7 +301,7 @@ namespace MatchZy
         {
             if (!isSideSelectionPhase) return;
             PrintToAllChat(Localizer["matchzy.knife.sidedecisionpending", knifeWinnerName]);
-            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{knifeWinnerName}{ChatColors.Default} Won the knife. Waiting for them to type {ChatColors.Green}.stay{ChatColors.Default} or {ChatColors.Green}.switch{ChatColors.Default}");
+            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{knifeWinnerName}{ChatColors.Default} Won the knife. Waiting for them to type {ChatColors.Gold}.stay{ChatColors.Default} or {ChatColors.Gold}.switch{ChatColors.Default}");
         }
 
         private void StartAfterKnifeWarmup()
@@ -312,7 +312,7 @@ namespace MatchZy
             string knifeWinnerSide = knifeWinner == 3 ? "CT" : "TERRORIST";
             ShowDamageInfo();
             PrintToAllChat(Localizer["matchzy.knife.sidedecisionpending", knifeWinnerName]);
-            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{knifeWinnerName}{ChatColors.Default} Won the knife. Waiting for them to type {ChatColors.Green}.stay{ChatColors.Default} or {ChatColors.Green}.switch{ChatColors.Default}");
+            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{knifeWinnerName}{ChatColors.Default} Won the knife. Waiting for them to type {ChatColors.Gold}.stay{ChatColors.Default} or {ChatColors.Gold}.switch{ChatColors.Default}");
             sideSelectionMessageTimer ??= AddTimer(chatTimerDelay, SendSideSelectionMessage, TimerFlags.REPEAT);
 
             // Send knife_ended event
@@ -366,9 +366,9 @@ namespace MatchZy
             // This is to reload the map once it is over so that all flags are reset accordingly
             Server.ExecuteCommand("mp_match_end_restart true");
 
-            PrintToAllChat($"{ChatColors.Olive}LIVE!");
-            PrintToAllChat($"{ChatColors.Lime}LIVE!");
-            PrintToAllChat($"{ChatColors.Green}LIVE!");
+            PrintToAllChat($"{ChatColors.Yellow}LIVE!");
+            PrintToAllChat($"{ChatColors.LightRed}LIVE!");
+            PrintToAllChat($"{ChatColors.Gold}LIVE!");
 
             var goingLiveEvent = new GoingLiveEvent
             {
@@ -704,7 +704,7 @@ namespace MatchZy
                 if (int.TryParse(commandArg, out int readyRequired) && readyRequired >= 0 && readyRequired <= 32)
                 {
                     minimumReadyRequired = readyRequired;
-                    string minimumReadyRequiredFormatted = (player == null) ? $"{minimumReadyRequired}" : $"{ChatColors.Green}{minimumReadyRequired}{ChatColors.Default}";
+                    string minimumReadyRequiredFormatted = (player == null) ? $"{minimumReadyRequired}" : $"{ChatColors.Gold}{minimumReadyRequired}{ChatColors.Default}";
                     // ReplyToUserCommand(player, $"Minimum ready players required to start the match are now set to: {minimumReadyRequiredFormatted}");
                     ReplyToUserCommand(player, Localizer["matchzy.utility.minreadyplayers", minimumReadyRequiredFormatted]);
                     CheckLiveRequired();
@@ -717,7 +717,7 @@ namespace MatchZy
             }
             else
             {
-                string minimumReadyRequiredFormatted = (player == null) ? $"{minimumReadyRequired}" : $"{ChatColors.Green}{minimumReadyRequired}{ChatColors.Default}";
+                string minimumReadyRequiredFormatted = (player == null) ? $"{minimumReadyRequired}" : $"{ChatColors.Gold}{minimumReadyRequired}{ChatColors.Default}";
                 // ReplyToUserCommand(player, $"Current Ready Required: {minimumReadyRequiredFormatted} .Usage: !readyrequired <number_of_ready_players_required>");
                 ReplyToUserCommand(player, Localizer["matchzy.utility.currentreadyrequired", minimumReadyRequiredFormatted]);
             }
@@ -830,7 +830,7 @@ namespace MatchZy
             }
             if (showCreditsOnMatchStart.Value)
             {
-                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}MatchZy{ChatColors.Default} Plugin by {ChatColors.Green}WD-{ChatColors.Default}");
+                Server.PrintToChatAll($"{chatPrefix} Powered by {ChatColors.Red}ESPORTISM{ChatColors.Default}");
             }
             if (matchStartMessage.Value.Trim() != "" && matchStartMessage.Value.Trim() != "\"\"")
             {
@@ -964,17 +964,17 @@ namespace MatchZy
             }
             if (matchzyTeam1.seriesScore > matchzyTeam2.seriesScore)
             {
-                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{matchzyTeam1.teamName}{ChatColors.Default} is winning the series {ChatColors.Green}{matchzyTeam1.seriesScore}-{matchzyTeam2.seriesScore}{ChatColors.Default}");
+                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{matchzyTeam1.teamName}{ChatColors.Default} is winning the series {ChatColors.Gold}{matchzyTeam1.seriesScore}-{matchzyTeam2.seriesScore}{ChatColors.Default}");
 
             }
             else if (matchzyTeam2.seriesScore > matchzyTeam1.seriesScore)
             {
-                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{matchzyTeam2.teamName}{ChatColors.Default} is winning the series {ChatColors.Green}{matchzyTeam2.seriesScore}-{matchzyTeam1.seriesScore}{ChatColors.Default}");
+                Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{matchzyTeam2.teamName}{ChatColors.Default} is winning the series {ChatColors.Gold}{matchzyTeam2.seriesScore}-{matchzyTeam1.seriesScore}{ChatColors.Default}");
 
             }
             else
             {
-                Server.PrintToChatAll($"{chatPrefix} The series is tied at {ChatColors.Green}{matchzyTeam1.seriesScore}-{matchzyTeam2.seriesScore}{ChatColors.Default}");
+                Server.PrintToChatAll($"{chatPrefix} The series is tied at {ChatColors.Gold}{matchzyTeam1.seriesScore}-{matchzyTeam2.seriesScore}{ChatColors.Default}");
             }
             matchConfig.CurrentMapNumber += 1;
             string nextMap = matchConfig.Maplist[matchConfig.CurrentMapNumber];
@@ -1089,7 +1089,7 @@ namespace MatchZy
                     coachKillTimer?.Kill();
                     coachKillTimer = null;
                     (int t1score, int t2score) = GetTeamsScore();
-                    Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{matchzyTeam1.teamName} [{t1score} - {t2score}] {matchzyTeam2.teamName}");
+                    Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{matchzyTeam1.teamName} [{t1score} - {t2score}] {matchzyTeam2.teamName}");
 
                     ShowDamageInfo();
 
@@ -1128,11 +1128,11 @@ namespace MatchZy
                     // One of the team did not use .stop command hence display the proper message after the round has ended.
                     if (stopData["ct"] && !stopData["t"])
                     {
-                        Server.PrintToChatAll($"{chatPrefix} The round restore request by {ChatColors.Green}{reverseTeamSides["CT"].teamName}{ChatColors.Default} was cancelled as the round ended");
+                        Server.PrintToChatAll($"{chatPrefix} The round restore request by {ChatColors.Gold}{reverseTeamSides["CT"].teamName}{ChatColors.Default} was cancelled as the round ended");
                     }
                     else if (!stopData["ct"] && stopData["t"])
                     {
-                        Server.PrintToChatAll($"{chatPrefix} The round restore request by {ChatColors.Green}{reverseTeamSides["TERRORIST"].teamName}{ChatColors.Default} was cancelled as the round ended");
+                        Server.PrintToChatAll($"{chatPrefix} The round restore request by {ChatColors.Gold}{reverseTeamSides["TERRORIST"].teamName}{ChatColors.Default} was cancelled as the round ended");
                     }
 
                     // Invalidate .stop requests after a round is completed.
@@ -1247,7 +1247,7 @@ namespace MatchZy
                     return;
                 }
                 PrintToAllChat(Localizer["matchzy.pause.pausedthematch", pauseTeamName]);
-                // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}{pauseTeamName}{ChatColors.Default} has paused the match. Type .unpause to unpause the match");
+                // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}{pauseTeamName}{ChatColors.Default} has paused the match. Type .unpause to unpause the match");
 
                 SetMatchPausedFlags();
             }
@@ -1287,7 +1287,7 @@ namespace MatchZy
             }
             unpauseData["pauseTeam"] = "Admin";
             PrintToAllChat(Localizer["matchzy.pause.adminpausedthematch"]);
-            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Green}Admin{ChatColors.Default} has paused the match.");
+            // Server.PrintToChatAll($"{chatPrefix} {ChatColors.Gold}Admin{ChatColors.Default} has paused the match.");
             if (player == null)
             {
                 Server.PrintToConsole($"[MatchZy] {Localizer["matchzy.pause.adminpausedthematch"]}");
@@ -1418,29 +1418,29 @@ namespace MatchZy
 
             if (isPractice)
             {
-                player!.PrintToChat($" {ChatColors.Green}Spawns: {ChatColors.Default}.spawn, .ctspawn, .tspawn, .bestspawn, .worstspawn");
-                player.PrintToChat($" {ChatColors.Green}Bots: {ChatColors.Default}.bot, .nobots, .crouchbot, .boost, .crouchboost");
-                player.PrintToChat($" {ChatColors.Green}Nades: {ChatColors.Default}.loadnade, .savenade, .importnade, .listnades");
-                player.PrintToChat($" {ChatColors.Green}Nade Throw: {ChatColors.Default}.rethrow, .throwindex <index>, .lastindex, .delay <number>");
-                player.PrintToChat($" {ChatColors.Green}Utility & Toggles: {ChatColors.Default}.clear, .fastforward, .last, .back, .solid, .impacts, .traj");
-                player.PrintToChat($" {ChatColors.Green}Utility & Toggles: {ChatColors.Default}.savepos, .loadpos");
-                player.PrintToChat($" {ChatColors.Green}Sides & Others: {ChatColors.Default}.ct, .t, .spec, .fas, .god, .dryrun, .break, .exitprac");
+                player!.PrintToChat($" {ChatColors.Gold}Spawns: {ChatColors.Default}.spawn, .ctspawn, .tspawn, .bestspawn, .worstspawn");
+                player.PrintToChat($" {ChatColors.Gold}Bots: {ChatColors.Default}.bot, .nobots, .crouchbot, .boost, .crouchboost");
+                player.PrintToChat($" {ChatColors.Gold}Nades: {ChatColors.Default}.loadnade, .savenade, .importnade, .listnades");
+                player.PrintToChat($" {ChatColors.Gold}Nade Throw: {ChatColors.Default}.rethrow, .throwindex <index>, .lastindex, .delay <number>");
+                player.PrintToChat($" {ChatColors.Gold}Utility & Toggles: {ChatColors.Default}.clear, .fastforward, .last, .back, .solid, .impacts, .traj");
+                player.PrintToChat($" {ChatColors.Gold}Utility & Toggles: {ChatColors.Default}.savepos, .loadpos");
+                player.PrintToChat($" {ChatColors.Gold}Sides & Others: {ChatColors.Default}.ct, .t, .spec, .fas, .god, .dryrun, .break, .exitprac");
                 return;
             }
             if (readyAvailable)
             {
-                player!.PrintToChat($" {ChatColors.Green}Ready/Unready: {ChatColors.Default}.ready, .unready");
+                player!.PrintToChat($" {ChatColors.Gold}Ready/Unready: {ChatColors.Default}.ready, .unready");
                 return;
             }
             if (isSideSelectionPhase)
             {
-                player!.PrintToChat($" {ChatColors.Green}Side Selection: {ChatColors.Default}.stay, .switch, .ct, .t");
+                player!.PrintToChat($" {ChatColors.Gold}Side Selection: {ChatColors.Default}.stay, .switch, .ct, .t");
                 return;
             }
             if (matchStarted)
             {
                 string stopCommandMessage = isStopCommandAvailable ? ", .stop" : "";
-                player!.PrintToChat($" {ChatColors.Green}Pause/Restore: {ChatColors.Default}.pause, .unpause, .tac, .tech{stopCommandMessage}");
+                player!.PrintToChat($" {ChatColors.Gold}Pause/Restore: {ChatColors.Default}.pause, .unpause, .tac, .tech{stopCommandMessage}");
                 return;
             }
         }
